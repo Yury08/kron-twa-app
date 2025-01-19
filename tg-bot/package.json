@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "grammy": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.1",
+    "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "start": "node dist/bot.js",
+    "dev": "tsc --outDir dist && node dist/bot.js"
+  }
+}

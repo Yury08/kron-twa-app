@@ -1,0 +1,691 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--white: #fff;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: black;
+	color: #fff;
+}
+
+.container {
+	margin: 0 auto;
+	padding: 15px;
+}
+
+.container__inner {
+	padding: 0 0 30% 0;
+	margin: 0 auto;
+	max-width: 400px;
+}
+
+/* Login page */
+
+.indicate__wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+/* .indicate__title {
+  font-weight: 900;
+  font-size: 26px;
+  margin-bottom: 25px;
+} */
+
+.indicate__form input {
+	border: 0;
+	border-bottom: 2px solid #8a00f6;
+	border-radius: 15px;
+	width: 100%;
+	font-size: 16px;
+	line-height: 25px;
+	height: 40px;
+	text-align: center;
+	padding: 15px;
+	background: transparent;
+	color: #fff;
+	width: 100%;
+	margin-bottom: 25px;
+	font-weight: 600;
+	opacity: 0.65;
+}
+
+.indicate__form input:focus {
+	outline: 0;
+	color: #fff;
+	opacity: 0.65;
+}
+
+.indicate__form button {
+	width: 100%;
+	font-size: 16px;
+	background: transparent;
+	color: #fff;
+	border: 2px solid #fff;
+	border-radius: 5px;
+	height: 40px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 300ms linear;
+}
+
+.indicate__form button:hover {
+	color: #000;
+	background: #fff;
+}
+
+/* Login page */
+
+/* Home page */
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 10px 0;
+}
+
+.header__login-ava {
+	display: inline-block;
+	padding: 3px;
+	width: 30px;
+	background: #0098ea;
+	border-radius: 50%;
+	text-align: center;
+}
+
+.header__login-text {
+	margin-left: 5px;
+	font-size: 15px;
+	font-weight: 400;
+}
+
+.main-content {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.coin {
+	margin-bottom: 8px;
+}
+
+.coin__main-img {
+	cursor: pointer;
+	transition: transform 0.1s ease;
+}
+
+.coin__main-img:active {
+	transform: scale(0.9);
+}
+
+.coin__balance {
+	font-weight: 900;
+	font-size: 26px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.coin__text {
+	text-align: center;
+	color: #a6a6a6;
+	font-size: 12px;
+	font-weight: light;
+}
+
+.game {
+	width: 100%;
+	height: 70px;
+	background: #101010;
+	padding: 11px 20px;
+	border-radius: 10px;
+	margin-bottom: 15px;
+}
+
+.game__content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+}
+
+.game__button {
+	background: #fff;
+	color: #101010;
+	border: none;
+	border-radius: 25px;
+	padding: 6px 15px;
+	font-size: 12px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.game__button:hover {
+	box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.game__info {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.game__attempts {
+	color: #fff;
+	font-weight: 700;
+	font-size: 16px;
+}
+
+.farming__block {
+	padding: 0 15px 20px 15px;
+	position: fixed;
+	bottom: 10%;
+	width: 100%;
+	background: #000;
+}
+
+/* Процесс фарминга */
+.farming {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #333333;
+	height: 30px;
+	border-radius: 10px;
+	padding: 7px 10px;
+}
+
+.farming__balance {
+	color: #fff;
+	opacity: 0.55;
+	font-weight: 500;
+	font-size: 13px;
+	transition: all 0.1s ease-out;
+}
+
+.farming__timer {
+	color: #fff;
+	opacity: 0.55;
+	font-weight: 500;
+	font-size: 13px;
+}
+
+/* Начало фарминга */
+.farming__start {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #8a00f6;
+	text-transform: uppercase;
+	height: 30px;
+	border-radius: 10px;
+	padding: 7px 10px;
+}
+
+.farming__text {
+	color: #fff;
+	opacity: 0.75;
+	font-weight: 700;
+	font-size: 13px;
+}
+
+/* Home page */
+
+.tasks__header {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+.tasks__title {
+	font-size: 16px;
+	font-weight: 400;
+}
+
+/* .tasks__main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+} */
+
+.tasks__card {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	background: #101010;
+	margin-bottom: 15px;
+	padding: 15px;
+	border-radius: 10px;
+	transition: all 0.3s ease;
+}
+
+/* Добавляем стили для контейнера с картинкой и текстом */
+.tasks__card-content {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.tasks__card_img {
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+}
+
+.tasks__card_text {
+	font-size: 12px;
+	color: #7b7b7b;
+	font-weight: 400;
+	position: relative;
+	white-space: nowrap; /* Текст в одну строку */
+}
+
+.tasks__card.completed {
+	opacity: 0.7;
+	order: 1;
+}
+
+/* Обновляем стили для зачеркивания */
+.tasks__card.completed .tasks__card_text::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 1px;
+	background: #7b7b7b;
+	animation: strikethrough 0.3s ease-out forwards;
+}
+
+@keyframes strikethrough {
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+
+.tasks__card_button {
+	cursor: pointer;
+	padding: 5px 15px;
+	background: #353535;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 400;
+	border: none;
+	border-radius: 13px;
+	transition: all 300ms ease;
+}
+
+.tasks__card_button:hover {
+	opacity: 0.65;
+}
+
+/* .tasks__title_sec {
+	text-align: center;
+	margin: 15px 0;
+	font-size: 18px;
+	font-weight: 400;
+} */
+
+/* friends */
+
+.friends__header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.friends__title {
+	margin-bottom: 5px;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.friends__balance {
+	font-size: 28px;
+	font-weight: 900;
+	margin-bottom: 5px;
+}
+
+.friends__button {
+	cursor: pointer;
+	border: 0;
+	background: #8700f0;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 400;
+	padding: 5px 20px;
+	border-radius: 30px;
+	box-shadow: 0px 5px 100px 0px rgba(135, 0, 240, 0.97);
+	margin-bottom: 10px;
+	transition: all 300ms ease;
+}
+
+.friends__button:disabled {
+	cursor: not-allowed;
+	background: #333333;
+	color: #666666;
+	box-shadow: none;
+	opacity: 0.7;
+}
+
+.friends__button:not(:disabled):hover {
+	opacity: 0.85;
+}
+
+.friends__button:not(:disabled):active {
+	transform: scale(0.98);
+}
+
+.friends__text {
+	text-align: center;
+	color: #fff;
+	opacity: 0.65;
+	font-size: 12px;
+	font-weight: 400;
+	margin-bottom: 15px;
+}
+
+.friends__count {
+	font-size: 15px;
+	font-weight: 900;
+	margin-bottom: 10px;
+}
+
+.friends__body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 30px;
+}
+
+.friends__card {
+	width: 100%;
+	background: #101010;
+	padding: 10px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 10px;
+}
+
+.friends__card-ava {
+	display: inline-block;
+	padding: 8px;
+	width: 32px;
+	background: #0098ea;
+	border-radius: 50%;
+	text-align: center;
+	margin-right: 8px;
+	font-size: 12px;
+}
+
+.friends__card-name {
+	font-size: 14px;
+}
+
+.friends__card-balance {
+	font-size: 14px;
+	color: #fff;
+	opacity: 0.65;
+	font-weight: 400;
+}
+
+.friends__invite {
+	padding: 0 15px 20px 15px;
+	position: fixed;
+	bottom: 10%;
+	width: 100%;
+	background: linear-gradient(to top, black 80%, transparent);
+	transition: all 0.3s ease;
+	z-index: 2;
+}
+
+.friends__invite-button {
+	cursor: pointer;
+	border: 0;
+	width: 100%;
+	background: #8a00f6;
+	color: #fff;
+	font-weight: 700;
+	border-radius: 10px;
+	transition: all 0.3s ease;
+	padding: 12px 0;
+	font-size: 16px;
+	box-shadow: 0 4px 15px rgba(138, 0, 246, 0.3);
+}
+
+.friends__invite-button:active {
+	transform: scale(0.98);
+	box-shadow: 0 2px 8px rgba(138, 0, 246, 0.3);
+}
+
+/* friends */
+
+.balance-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.balance-icon {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.tasks__card_loader {
+	width: 24px;
+	height: 24px;
+	border: 2px solid #353535;
+	border-bottom-color: #8a00f6;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+	margin-right: 15px;
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Обновляем стили кнопки для соответствия размерам лоадера */
+.tasks__card_button {
+	min-width: 70px; /* Чтобы не было скачков при замене на лоадер */
+	height: 30px;
+	cursor: pointer;
+	padding: 5px 15px;
+	background: #353535;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 400;
+	border: none;
+	border-radius: 13px;
+	transition: all 300ms ease;
+}
+
+.tasks__section {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+/* .tasks__group {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+} */
+
+.tasks__title_sec {
+	text-align: center;
+	margin-bottom: 15px;
+	font-size: 18px;
+	font-weight: 500;
+	color: #8a00f6;
+}
+
+/* Обновляем существующий стиль */
+.tasks__main {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	/* padding: 0 15px; */
+}
+
+.friends__no-friends {
+	width: 100%;
+	text-align: left;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+/* Добавляем небольшую анимацию для текста */
+@keyframes pulse {
+	0% {
+		opacity: 0.7;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.7;
+	}
+}
+
+.farming__container {
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Admin Panel Styles */
+.admin {
+	padding: 20px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.admin__title {
+	font-size: 24px;
+	font-weight: 700;
+	margin-bottom: 30px;
+	text-align: center;
+	color: #8a00f6;
+}
+
+.admin__subtitle {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #fff;
+}
+
+.admin__form-container {
+	background: #101010;
+	padding: 20px;
+	border-radius: 10px;
+	margin-bottom: 30px;
+}
+
+.admin__form {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.admin__input,
+.admin__select {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 12px;
+	color: #fff;
+	font-size: 14px;
+}
+
+.admin__input:focus,
+.admin__select:focus {
+	border-color: #8a00f6;
+	outline: none;
+}
+
+.admin__button {
+	background: #8a00f6;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.admin__button:hover {
+	opacity: 0.9;
+}
+
+.admin__tasks-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 20px;
+}
+
+.admin__task-card {
+	background: #101010;
+	padding: 15px;
+	border-radius: 8px;
+	border: 1px solid #333;
+}
+
+.admin__task-card h3 {
+	font-size: 16px;
+	font-weight: 600;
+	margin-bottom: 10px;
+	color: #fff;
+}
+
+.admin__task-card p {
+	font-size: 14px;
+	color: #7b7b7b;
+	margin-bottom: 5px;
+}
+
+/* GAME */
+
+/* Добавим стили для страницы игры */
+
+.game-canvas {
+	display: block; /* Убирает лишний отступ внизу canvas */
+	width: 100vw;
+	height: 100vh;
+}

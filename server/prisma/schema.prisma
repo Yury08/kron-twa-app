@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  username     String  @unique
+  referralLink String  @unique @map("referral_link")
+  balance      Decimal @default(0) @db.Decimal(12, 3)
+  tickets      Int     @default(3)
+  role         Role    @default(user)
+
+  tgUsername String? @unique @map("tg_username")
+
+  friends   Friend[]
+  UserTasks UserTasks[]
+  Farming   Farming[]
+
+  @@map("user")
+}
+
+model Friend {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  username String  @unique
+  earn     Decimal @default(0) @db.Decimal(12, 3)
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String?
+
+  @@map("friend")
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title     String
+  reward    Int
+  icon      String      @default("default")
+  type      TypeTask    @default(general)
+  UserTasks UserTasks[]
+
+  @@map("task")
+}
+
+model UserTasks {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  task   Task   @relation(fields: [taskId], references: [id])
+  taskId String
+
+  isCompleted Boolean @default(false) @map("is_completed")
+  title       String
+
+  @@index([userId, taskId])
+  @@map("user_tasks")
+}
+
+model Farming {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  totalSeconds Int      @default(0) @map("total_seconds")
+  isCompleted  Boolean? @default(false) @map("is_completed")
+  amount       Decimal  @default(0) @db.Decimal(12, 3)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("farming")
+}
+
+model Menu {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title String
+  link  String
+  icon  String
+
+  @@map("menu")
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum TypeTask {
+  socials
+  airdrop
+  promo
+  general
+}
