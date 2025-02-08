@@ -7,7 +7,7 @@ export async function run(provider: NetworkProvider) {
     const jettonParams = {
         name: 'KRAVZOVCOIN',
         description: 'KRAVZOVCOIN - official token for earning',
-        symbol: 'KRC',
+        symbol: 'KRN',
         image: 'https://yury08.github.io/torch-metadata/coin.png',
     };
 

@@ -5,7 +5,7 @@ import { SampleJetton } from '../build/SampleJetton/tact_SampleJetton';
 export async function run(provider: NetworkProvider) {
     const jettonMetadata = {
         name: 'KRAVZOVCOIN',
-        symbol: 'KRC',
+        symbol: 'KRN',
         description: 'KRAVZOVCOIN - жеттон для заработка',
         decimals: 9,
         image: 'https://yury08.github.io/torch-metadata/coin.png',

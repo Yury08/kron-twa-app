@@ -31,7 +31,7 @@ export class AuthController {
 			const { user, jwtToken } = await this.authService.register(dto)
 			const referral_user = await this.userService.getByUsername(referral_name)
 			this.friendService.create(user.username, referral_user.id)
-			this.userService.updateTickets(referral_user.id, 28)
+			this.userService.updateTickets(referral_user.id)
 			return { user, jwtToken }
 		}
 		const { user, jwtToken } = await this.authService.register(dto)

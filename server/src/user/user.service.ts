@@ -63,7 +63,7 @@ export class UserService {
 		})
 	}
 
-	async updateTickets(userId: string, quantity: number = 3) {
+	async updateTickets(userId: string, quantity: number = 5) {
 		const tickets = (await this.getById(userId)).tickets + quantity
 		return await this.prisma.user.update({
 			where: {
