@@ -112,7 +112,7 @@ const Friends: FC = () => {
 					alt='icon_friends'
 				/>
 				<p className='friends__title'>Invite friends</p>
-				<h1 className='friends__balance'>{totalEarnings} POINTS</h1>
+				<h1 className='friends__balance'>{totalEarnings} KRN</h1>
 				<button
 					className='friends__button'
 					onClick={() => claimReward()}
@@ -142,7 +142,7 @@ const Friends: FC = () => {
 								</span>
 								<span className='friends__card-name'>{friend.username}</span>
 							</div>
-							<p className='friends__card-balance'>{friend.earn} POINTS</p>
+							<p className='friends__card-balance'>{friend.earn} KRN</p>
 						</div>
 					))
 				) : (

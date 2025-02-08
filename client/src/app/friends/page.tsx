@@ -1,11 +1,8 @@
-import dynamic from 'next/dynamic'
 import { FC } from 'react'
 
-import Friends from './Friends'
+import { Navigation } from '@/components/nav/Navigation'
 
-const Navigation = dynamic(() =>
-	import('@/components/nav/Navigation').then(mod => mod.Navigation)
-)
+import Friends from './Friends'
 
 const FriendsPage: FC = () => {
 	return (

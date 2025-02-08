@@ -104,7 +104,7 @@ const Tasks: FC = () => {
 					/>
 					<p className='tasks__card_text'>
 						{task.title}
-						<br />+{task.reward} POINTS
+						<br />+{task.reward} KRN
 					</p>
 				</div>
 
@@ -135,7 +135,7 @@ const Tasks: FC = () => {
 					alt='header image'
 				/>
 				<h2 className='tasks__title'>
-					Perform tasks and pick up KRC <br />
+					Perform tasks and pick up KRN <br />
 					You can complete {tasks?.length || 0} tasks
 				</h2>
 			</div>

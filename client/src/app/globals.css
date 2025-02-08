@@ -10,6 +10,10 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 body {
@@ -688,4 +692,11 @@ body {
 	display: block; /* Убирает лишний отступ внизу canvas */
 	width: 100vw;
 	height: 100vh;
+}
+
+.no-select {
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }

@@ -1,20 +1,25 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
+
+import { Button } from '@/components/ui/button'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 import useTelegramInitData from '@/hooks/useTelegramInitData'
 
 import coin_logo_main from '../../../public/coin_logo_main.svg'
-import { Button } from '../../components/ui/button'
 import { Field } from '../../components/ui/field'
 import { IAuthForm } from '../../types/auth.types'
 
 import { authService } from '@/services/auth.service'
+
+const DynamicImage = dynamic(() => import('next/image'), {
+	ssr: false
+})
 
 const Auth = () => {
 	const { register, reset, handleSubmit } = useForm<IAuthForm>({
@@ -29,7 +34,7 @@ const Auth = () => {
 		mutationFn: (data: IAuthForm) =>
 			authService.main({
 				...data,
-				tgUsername: user?.username // tg_test_${data.username} для теста
+				tgUsername: user?.username
 			}),
 		async onSuccess() {
 			const { toast } = await import('sonner')
@@ -47,7 +52,7 @@ const Auth = () => {
 		<>
 			<div className='indicate'>
 				<div className='indicate__wrapper'>
-					<Image
+					<DynamicImage
 						src={coin_logo_main}
 						alt='coin image'
 						width={300}

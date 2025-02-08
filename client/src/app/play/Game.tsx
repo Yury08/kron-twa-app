@@ -29,14 +29,14 @@ const Game: FC = () => {
 		let x = (canvasRef.current?.width as number) / 2
 		let y = (canvasRef.current?.height as number) / 2
 
-		const player = new Player(x, y, 10, 'white')
+		const player = new Player(x, y, 7, 'white')
 
 		setPlayer(player)
 		setCtx(ctx)
 
 		// BG
-		for (let x = 0; x < canvasRef.current.width; x += 35) {
-			for (let y = 0; y < canvasRef.current.height; y += 35) {
+		for (let x = 0; x < canvasRef.current.width; x += 30) {
+			for (let y = 0; y < canvasRef.current.height; y += 30) {
 				gameState.setBackgroundParticles(prev => [
 					...prev,
 					new BackgroundParticle(x, y, 3, 'blue')

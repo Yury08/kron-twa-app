@@ -29,7 +29,7 @@ const StarBackground: FC = () => {
 				y: Math.random() * canvas.height,
 				radius: Math.random() * 1.5,
 				alpha: Math.random(),
-				velocity: Math.random() * 0.5
+				velocity: Math.random() * 0.15
 			}))
 		}
 
@@ -61,7 +61,7 @@ const StarBackground: FC = () => {
 		// Обработчик изменения размера окна
 		const handleResize = () => {
 			setCanvasSize()
-			initStars() // Переинициализируем звезды при изменении размера
+			initStars()
 		}
 
 		setCanvasSize()
@@ -76,7 +76,7 @@ const StarBackground: FC = () => {
 				cancelAnimationFrame(animationFrameRef.current)
 			}
 		}
-	}, []) // Пустой массив зависимостей - эффект выполнится только один раз
+	}, [])
 
 	return (
 		<canvas

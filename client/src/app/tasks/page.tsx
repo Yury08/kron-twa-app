@@ -1,11 +1,8 @@
-import dynamic from 'next/dynamic'
 import { FC } from 'react'
 
-import Tasks from './Tasks'
+import { Navigation } from '@/components/nav/Navigation'
 
-const Navigation = dynamic(() =>
-	import('@/components/nav/Navigation').then(mod => mod.Navigation)
-)
+import Tasks from './Tasks'
 
 const TasksPage: FC = () => {
 	return (

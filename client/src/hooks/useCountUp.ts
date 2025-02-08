@@ -16,24 +16,34 @@ export const useCountUp = ({
 	const [count, setCount] = useState(start)
 
 	useEffect(() => {
-		if (!enabled) return
+		if (!enabled) {
+			setCount(start)
+			return
+		}
+
+		if (duration <= 0) return
 
 		const startTime = Date.now()
-		const endTime = startTime + duration * 1000
 
 		const updateCount = () => {
 			const now = Date.now()
-			const progress = Math.min((now - startTime) / (duration * 1000), 1)
-			const currentCount = Math.floor(start + (end - start) * progress)
+			const elapsedTime = (now - startTime) / 1000 // в секундах
+			const progress = elapsedTime / duration // Такая же формула как в Farming
 
-			setCount(currentCount)
-
-			if (progress < 1) {
+			if (progress <= 1) {
+				const currentCount = Math.floor(start + (end - start) * progress)
+				setCount(currentCount)
 				requestAnimationFrame(updateCount)
+			} else {
+				setCount(end)
 			}
 		}
 
 		requestAnimationFrame(updateCount)
+
+		return () => {
+			setCount(enabled ? end : start)
+		}
 	}, [end, duration, start, enabled])
 
 	return count

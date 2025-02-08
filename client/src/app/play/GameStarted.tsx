@@ -49,7 +49,7 @@ const GameStarted = ({ gameState }: GameStartedProps) => {
 							<h1 className='text-3xl font-bold leading-none mt-6'>
 								{gameState.scoreEl}
 							</h1>
-							<p className='text-xs text-gray-700 mb-3'>Points</p>
+							<p className='text-xs text-gray-700 mb-3'>KRN</p>
 							<div>
 								<button
 									onClick={() => onSubmit()}

@@ -13,12 +13,8 @@ export const Header = ({ user }: { user: IUser | undefined }) => {
 	return (
 		<div className='header'>
 			<div className='header__login'>
-				<span className='header__login-ava'>
-					{user?.username?.charAt(0) || 'Y'}
-				</span>
-				<span className='header__login-text'>
-					{user?.username || 'Yury_Kravzov'}
-				</span>
+				<span className='header__login-ava'>{user?.username?.charAt(0)}</span>
+				<span className='header__login-text'>{user?.username}</span>
 			</div>
 			{/* 
 			{isVerifying ? (
