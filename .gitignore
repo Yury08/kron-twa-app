@@ -1,6 +1,7 @@
 .vscode/*
 
 # client
+/tg-bot/.env
 
 # dependencies
 /client/node_modules
