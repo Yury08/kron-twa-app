@@ -2,6 +2,7 @@
 
 # client
 /tg-bot/.env
+/tg-bot/node_modules
 
 # dependencies
 /client/node_modules

@@ -36,11 +36,20 @@ const Auth = () => {
 				...data,
 				tgUsername: user?.username
 			}),
-		async onSuccess() {
+		onSuccess: async () => {
 			const { toast } = await import('sonner')
 			toast.success('Successfully login')
 			reset()
 			push(DASHBOARD_PAGES.HOME)
+		},
+		onError: async (error: any) => {
+			const { toast } = await import('sonner')
+			// Проверяем, является ли ошибка ошибкой существующего пользователя
+			if (error.response?.data?.message === 'User already exists') {
+				toast.info('This username is already taken. Please choose another one.')
+			} else {
+				toast.error('Registration failed. Please try again.')
+			}
 		}
 	})
 

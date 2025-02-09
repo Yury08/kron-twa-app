@@ -8,8 +8,6 @@ import { AuthDto } from './dto/auth.dto'
 
 @Injectable()
 export class AuthService {
-	REFRESH_TOKEN_NAME = 'refreshToken'
-	EXPIRES_DAY_REFRESH_TOKEN = 1
 	constructor(
 		private userService: UserService,
 		private tasksService: TasksService,

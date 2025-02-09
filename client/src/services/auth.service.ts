@@ -6,7 +6,6 @@ export class AuthService {
 		const res = await axiosClassic.post<IAuthResponse>(`/auth/reg`, data)
 		// localStorage.setItem('telegram_username', data.username)
 		if (!res.data.jwtToken) throw new Error('No jwtToken')
-
 		localStorage.setItem('jwtToken', res.data.jwtToken)
 
 		return res.data.user
