@@ -4,25 +4,46 @@ import { axiosTelegram } from '../api/interceptors'
 import { IUser } from '../types/auth.types'
 import { IMenu, IMenuForm } from '../types/menu.types'
 
+import { storageService } from '@/services/storage.service'
+
 export class UserService {
 	private URL = '/user'
 
 	async getUser() {
-		const res = await axiosTelegram.get<IUser>(this.URL)
+		try {
+			console.log('Making API request to get user...')
+			const token = await storageService.getItem('jwtToken')
+			console.log('Current token:', token)
+
+			const res = await axiosTelegram.get<IUser>(this.URL)
+			console.log('API response:', res.data)
+
+			// Сохраняем в CloudStorage
+			await storageService.setItem('user', JSON.stringify(res.data))
+			return res.data
+		} catch (error) {
+			console.error('Error in getUser service:', error)
+			throw error
+		}
+	}
+
+	// Обновление баланса с обновлением в CloudStorage
+	async updateBalance(data: IBalance) {
+		const res = await axiosTelegram.post(`${this.URL}/balance_up`, data)
+		const user = await this.getUser() // Получаем обновленные данные
+		await storageService.setItem('user', JSON.stringify(user))
 		return res.data
 	}
 
-	// билеты
+	// Обновление билетов с обновлением в CloudStorage
 	async reducingUserTickets() {
 		const { data } = await axiosTelegram.post(`${this.URL}/ticket`)
 		if (typeof data === 'string') return -1
-		if (data) return data
-	}
-
-	// обновление баланса
-	async updateBalance(data: IBalance) {
-		const res = await axiosTelegram.post(`${this.URL}/balance_up`, data)
-		return res.data
+		if (data) {
+			const user = await this.getUser() // Получаем обновленные данные
+			await storageService.setItem('user', JSON.stringify(user))
+			return data
+		}
 	}
 
 	// только для admin пользователей

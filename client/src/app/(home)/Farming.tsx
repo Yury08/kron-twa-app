@@ -20,11 +20,43 @@ const Farming: FC = () => {
 	const [ttl, setTtl] = useState<number>(0)
 	const [currentAmount, setCurrentAmount] = useState(0)
 	const [startAmount, setStartAmount] = useState(0) // Добавляем состояние для начального значения
+	const [isClaim, setIsClaim] = useState('false')
+	const [farmData, setFarmData] = useState<any>(null)
+	const [farmStartTime, setFarmStartTime] = useState<number | null>(null)
 
-	// Получаем сохраненные данные
-	const isClaim = localStorage.getItem('isClaim') || 'false'
-	const storedData = localStorage.getItem('farm')
-	const farmAmount = storedData ? Number(JSON.parse(storedData).amount) : 0
+	// Загрузка данных из CloudStorage
+	useEffect(() => {
+		const loadStorageData = () => {
+			window.Telegram.WebApp.CloudStorage.getItem('isClaim', (err, value) => {
+				if (!err) {
+					setIsClaim(value || 'false')
+				}
+			})
+
+			window.Telegram.WebApp.CloudStorage.getItem('farm', (err, value) => {
+				if (!err && value) {
+					const data = JSON.parse(value)
+					setFarmData(data)
+				}
+			})
+
+			// Загружаем время начала фарминга
+			window.Telegram.WebApp.CloudStorage.getItem(
+				'farmStartTime',
+				(err, value) => {
+					if (!err && value) {
+						setFarmStartTime(Number(value))
+					}
+				}
+			)
+		}
+
+		loadStorageData()
+		const interval = setInterval(loadStorageData, 1000)
+		return () => clearInterval(interval)
+	}, [])
+
+	const farmAmount = farmData ? Number(farmData.amount) : 0
 
 	// Запрос TTL
 	const { refetch: refetchTtl } = useQuery({
@@ -47,24 +79,31 @@ const Farming: FC = () => {
 		return Math.floor(totalAmount * progress * 1000)
 	}
 
+	// Вычисляем прогресс при загрузке
 	useEffect(() => {
-		refetchTtl().then(res => {
-			const remainingTime = res.data
+		if (farmStartTime && farmData) {
+			const currentTime = Date.now()
+			const elapsedTime = Math.floor((currentTime - farmStartTime) / 1000)
+			const remainingTime = Math.max(expiry - elapsedTime, 0)
+
 			if (remainingTime > 0) {
 				setTtl(remainingTime)
 				setIsActive(true)
 
-				const elapsedTime = expiry - remainingTime // Вычисляем прошедшее время
 				const accumulatedAmount = calculateAccumulatedAmount(
 					expiry,
 					elapsedTime,
-					farmAmount
+					Number(farmData.amount)
 				)
-				setStartAmount(accumulatedAmount) // Начальное значение - уже накопленная сумма
-				setCurrentAmount(farmAmount * 1000) // Конечное значение
+				setStartAmount(accumulatedAmount)
+				setCurrentAmount(Number(farmData.amount) * 1000)
+			} else if (remainingTime === 0) {
+				// Если время вышло, устанавливаем claim
+				window.Telegram.WebApp.CloudStorage.setItem('isClaim', 'true')
+				setIsClaim('true')
 			}
-		})
-	}, [])
+		}
+	}, [farmStartTime, farmData])
 
 	const { startTimer, resetTimer, formatTime, isActive, setIsActive } =
 		useTimer({
@@ -86,9 +125,19 @@ const Farming: FC = () => {
 		onSuccess: async data => {
 			const { toast } = await import('sonner')
 			toast.success('Farming started success!')
-			localStorage.setItem('farm', JSON.stringify(data))
+
+			const startTime = Date.now()
+			window.Telegram.WebApp.CloudStorage.setItem('farm', JSON.stringify(data))
+			window.Telegram.WebApp.CloudStorage.setItem(
+				'farmStartTime',
+				startTime.toString()
+			)
+			window.Telegram.WebApp.CloudStorage.setItem('isClaim', 'false')
+
+			setFarmStartTime(startTime)
+			setFarmData(data)
 			setStartAmount(0)
-			setCurrentAmount(Number(data.amount) * 1000) // Умножаем на 1000
+			setCurrentAmount(Number(data.amount) * 1000)
 			startTimer(expiry)
 			setIsActive(true)
 		}
@@ -101,6 +150,12 @@ const Farming: FC = () => {
 		onSuccess: async () => {
 			const { toast } = await import('sonner')
 			toast.success('The reward has been collected')
+
+			// Очищаем данные фарминга
+			window.Telegram.WebApp.CloudStorage.removeItem('farmStartTime')
+			window.Telegram.WebApp.CloudStorage.setItem('isClaim', 'false')
+
+			setFarmStartTime(null)
 			resetTimer(expiry)
 			setRewardCollected(true)
 			setCurrentAmount(0)
@@ -133,7 +188,7 @@ const Farming: FC = () => {
 	return (
 		<div className='farming__block no-select'>
 			<div className='farming__container'>
-				{JSON.parse(isClaim) ? (
+				{isClaim === 'true' ? (
 					<div
 						onClick={onClickClaim}
 						className='farming__start'

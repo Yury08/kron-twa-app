@@ -65,9 +65,7 @@ export class FarmingService {
 
 	async getBalance(userId: string) {
 		const res = await this.redisClient.get(`${userId}_balance`)
-		if (!res) {
-			throw new Error('Balance not found in Redis')
-		}
+		if (!res) return
 		return JSON.parse(res)
 	}
 

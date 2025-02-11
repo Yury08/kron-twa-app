@@ -54,17 +54,50 @@ const Home: FC = () => {
 	}, [rewardCollected])
 
 	useEffect(() => {
-		window.Telegram.WebApp.setBackgroundColor('#000000')
-		if (!localStorage.getItem('jwtToken')) {
-			push(DASHBOARD_PAGES.AUTH)
-		} else {
-			setLoading(false)
-			refetch().then(res => {
-				if (res.data) {
-					setBalance(res.data)
+		// window.Telegram?.WebApp?.setBackgroundColor('#000000')
+		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
+			if (!err) {
+				if (token) {
+					setLoading(false)
+					refetch().then(res => {
+						if (res.data) {
+							setBalance(res.data)
+						}
+					})
+				} else {
+					push(DASHBOARD_PAGES.AUTH)
 				}
-			})
-		}
+			} else {
+				throw new Error(err.message)
+			}
+		})
+		// Удаление токена из telegram storage
+		// storageService
+		// 	.removeItem('jwtToken')
+		// 	.then(() => {
+		// 		window.Telegram.WebApp.CloudStorage.getItem(
+		// 			'jwtToken',
+		// 			(err, token) => {
+		// 				if (!err) {
+		// 					if (token) {
+		// 						setLoading(false)
+		// 						refetch().then(res => {
+		// 							if (res.data) {
+		// 								setBalance(res.data)
+		// 							}
+		// 						})
+		// 					} else {
+		// 						push(DASHBOARD_PAGES.AUTH)
+		// 					}
+		// 				} else {
+		// 					console.log(`ERROR - ${err.message}`)
+		// 				}
+		// 			}
+		// 		)
+		// 	})
+		// 	.catch((error: Error) => {
+		// 		console.error('Error removing token:', error)
+		// 	})
 	}, [])
 
 	// const toggleBalance = () => {

@@ -48,11 +48,17 @@ const Tasks: FC = () => {
 	}
 
 	useEffect(() => {
-		if (!localStorage.getItem('jwtToken')) {
-			push(DASHBOARD_PAGES.AUTH)
-		} else {
-			setLoading(false)
-		}
+		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
+			if (!err) {
+				if (token) {
+					setLoading(false)
+				} else {
+					push(DASHBOARD_PAGES.AUTH)
+				}
+			} else {
+				console.log(`ERROR - ${err.message}`)
+			}
+		})
 	}, [])
 
 	// Группируем задачи по типам

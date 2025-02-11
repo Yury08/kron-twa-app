@@ -13,6 +13,7 @@ import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 import icon_friends from '../../../public/icon_friends.svg'
 
 import { friendService } from '@/services/friend.service'
+import { storageService } from '@/services/storage.service'
 
 const UPDATE_INTERVAL = 24 * 60 * 60 * 1000 // 24 часа в миллисекундах
 // const UPDATE_INTERVAL = 60 * 1000
@@ -35,7 +36,7 @@ const Friends: FC = () => {
 		mutationKey: ['updateFriendsEarning'],
 		mutationFn: () => friendService.updateFriendsEarning(),
 		onSuccess: async () => {
-			localStorage.setItem(LAST_UPDATE_KEY, Date.now().toString())
+			storageService.setItem(LAST_UPDATE_KEY, JSON.stringify(Date.now()))
 			await refetch()
 		},
 		onError: async error => {
@@ -43,8 +44,8 @@ const Friends: FC = () => {
 		}
 	})
 
-	const checkAndUpdate = useCallback(() => {
-		const lastUpdate = localStorage.getItem(LAST_UPDATE_KEY)
+	const checkAndUpdate = useCallback(async () => {
+		const lastUpdate = await storageService.getItem(LAST_UPDATE_KEY)
 		const now = Date.now()
 
 		if (!lastUpdate || now - Number(lastUpdate) >= UPDATE_INTERVAL) {
@@ -71,11 +72,17 @@ const Friends: FC = () => {
 	})
 
 	useEffect(() => {
-		if (!localStorage.getItem('jwtToken')) {
-			push(DASHBOARD_PAGES.AUTH)
-		} else {
-			setLoading(false)
-		}
+		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
+			if (!err) {
+				if (token) {
+					setLoading(false)
+				} else {
+					push(DASHBOARD_PAGES.AUTH)
+				}
+			} else {
+				console.log(`ERROR - ${err.message}`)
+			}
+		})
 	}, [])
 
 	const calculateTotal = useCallback(() => {
@@ -93,8 +100,8 @@ const Friends: FC = () => {
 	}, [friends, calculateTotal])
 
 	// Проверяем, можно ли получить награду
-	const canClaim = useCallback(() => {
-		const lastUpdate = localStorage.getItem(LAST_UPDATE_KEY)
+	const canClaim = useCallback(async () => {
+		const lastUpdate = await storageService.getItem(LAST_UPDATE_KEY)
 		const hasUpdated =
 			!!lastUpdate && Date.now() - Number(lastUpdate) < UPDATE_INTERVAL
 		const hasEarnings = totalEarnings !== '0.00'

@@ -17,7 +17,7 @@ export const useTimer = ({ initialSeconds = 0 }: ITimerProps) => {
 			interval = setInterval(() => {
 				setSeconds(prevSeconds => {
 					if (prevSeconds <= 1) {
-						localStorage.setItem('isClaim', 'true')
+						window.Telegram.WebApp.CloudStorage.setItem('isClaim', 'true')
 						setIsActive(false)
 						return 0
 					}
@@ -41,7 +41,7 @@ export const useTimer = ({ initialSeconds = 0 }: ITimerProps) => {
 	const resetTimer = useCallback(
 		(duration?: number) => {
 			setIsActive(false)
-			localStorage.setItem('isClaim', 'false')
+			window.Telegram.WebApp.CloudStorage.setItem('isClaim', 'false')
 			setSeconds(duration || initialSeconds)
 		},
 		[initialSeconds]
