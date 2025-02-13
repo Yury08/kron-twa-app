@@ -27,7 +27,14 @@ const Auth = () => {
 	})
 
 	const { push } = useRouter()
-	const { user } = useTelegramInitData()
+	const initData = useTelegramInitData()
+
+	if (!initData) {
+		console.log('Данные Telegram WebApp еще не загружены')
+		return <div>"Telegram WebApp is not open"</div>
+	}
+
+	const { user } = initData
 
 	const { mutate } = useMutation({
 		mutationKey: ['auth'],

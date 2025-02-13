@@ -1,18 +1,14 @@
-FROM node:23.3.0-alpine AS builder
+FROM node:18-alpine
 
-ENV APP_HOME=/client
+WORKDIR /usr/src/app
 
-WORKDIR $APP_HOME
+COPY package*.json ./
 
-COPY package.json ./
-
-RUN npm install --frozen-lockfile
+RUN npm install
 
 COPY . .
 
-RUN npm run build
-
-RUN npm install --production --frozen-lockfile
+RUN npm run build --skip-nx-cache 
 
 EXPOSE 3000
 

@@ -1,34 +1,15 @@
-FROM node:23.3.0-alpine AS builder
+FROM node:18
 
-ENV APP_HOME=/server
+WORKDIR /usr/src/app
+COPY package*.json ./
 
-WORKDIR $APP_HOME
-
-COPY package.json ./
-
-RUN npm install --frozen-lockfile
+RUN apt-get update && apt-get install -y openssl
+RUN npm install
 
 COPY . .
 
+RUN npm run prisma:generate
 RUN npm run build
 
-RUN npm install --production --frozen-lockfile
-
-# --- Этап 2: Запуск в легковесном образе ---
-
-FROM node:23.3.0-alpine AS runner
-
-WORKDIR /server
-
-# Копируем собранное приложение из builder-стадии
-COPY --from=builder /server/dist ./dist
-COPY --from=builder /server/node_modules ./node_modules
-COPY --from=builder /server/package.json ./
-
-# Переменные окружения
-ENV NODE_ENV=production
-ENV PORT=3001
-
-EXPOSE 3001
-
-CMD ["node", "dist/main"]
+EXPOSE 5555
+CMD ["npm", "run", "start:prod"]

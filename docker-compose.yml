@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # База данных PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: kron_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-twa_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - kron_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis для кэширования
+  redis:
+    image: redis:alpine
+    container_name: kron_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - kron_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend - NestJS
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: kron_backend
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-twa_db}
+    ports:
+      - '5555:5555'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - kron_network
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+
+  # Frontend - NextJS
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: kron_frontend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    networks:
+      - kron_network
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+
+  # Telegram Bot
+  tg-bot:
+    build:
+      context: ./tg-bot
+      dockerfile: Dockerfile
+    container_name: kron_bot
+    environment:
+      - NODE_ENV=production
+      - BOT_TOKEN=${BOT_TOKEN}
+      - WEB_URL=${WEB_URL}
+      - CHANNEL_URL=${CHANNEL_URL}
+    depends_on:
+      - backend
+    networks:
+      - kron_network
+    volumes:
+      - ./tg-bot:/usr/src/app
+      - /usr/src/app/node_modules
+
+networks:
+  kron_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

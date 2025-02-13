@@ -3,25 +3,31 @@
 import { useEffect, useState } from 'react'
 import { TelegramWebApps } from 'telegram-webapps-types-new'
 
+type WebAppInitData = TelegramWebApps.WebAppInitData
+
 function useTelegramInitData() {
-	const [data, setData] = useState<TelegramWebApps.WebAppInitData>({})
+	const [data, setData] = useState<WebAppInitData>()
 
 	useEffect(() => {
 		const firstLayerInitData = Object.fromEntries(
 			new URLSearchParams(window.Telegram.WebApp.initData)
 		)
 
-		const initData: Record<string, string> = {}
+		const initData: Partial<WebAppInitData> = {}
 
 		for (const key in firstLayerInitData) {
 			try {
-				initData[key] = JSON.parse(firstLayerInitData[key])
+				const parsedValue = JSON.parse(firstLayerInitData[key])
+				// @ts-ignore - игнорируем, так как мы знаем структуру данных от Telegram
+				initData[key] = parsedValue
 			} catch {
+				// @ts-ignore - то же самое для непарсящихся значений
 				initData[key] = firstLayerInitData[key]
 			}
 		}
 
-		setData(initData)
+		// Приводим initData к типу WebAppInitData
+		setData(initData as WebAppInitData)
 	}, [])
 
 	return data
