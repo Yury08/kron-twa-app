@@ -54,7 +54,6 @@ const Home: FC = () => {
 	}, [rewardCollected])
 
 	useEffect(() => {
-		// window.Telegram?.WebApp?.setBackgroundColor('#000000')
 		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
 			if (!err) {
 				if (token) {

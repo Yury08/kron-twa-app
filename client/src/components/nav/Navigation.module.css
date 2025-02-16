@@ -1,20 +1,27 @@
 .navigation {
-	width: 90%;
+	/* width: 90%;
 	background: #000;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	position: fixed;
 	bottom: 0;
+	padding: 10px 0; */
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	padding: 10px 0;
+	z-index: 100;
+	display: flex;
+	justify-content: space-around;
 }
 
 .navigation__item {
-	text-align: center;
-	cursor: pointer;
-	font-size: 18px;
-	font-weight: 300;
-	transition: all 300ms ease;
+	color: #fff; /* Цвет текста */
+	text-align: center; /* Центрируем текст */
+	font-size: 16px; /* Размер шрифта */
+	transition: color 0.3s; /* Плавный переход цвета */
 }
 
 .navigation__item_title {
