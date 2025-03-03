@@ -56,7 +56,7 @@ services:
     networks:
       - kron_network
     volumes:
-      - ./server:/usr/src/app
+      # - ./server:/usr/src/app
       - /usr/src/app/node_modules
 
   # Frontend - NextJS

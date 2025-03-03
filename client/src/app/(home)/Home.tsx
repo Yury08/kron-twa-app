@@ -11,7 +11,6 @@ import Loader from '@/components/ui/Loader'
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 import useGetUser from '@/hooks/useGetUser'
-import { useTicket } from '@/hooks/useTicket'
 
 import coin_logo_main from '../../../public/coin_logo_main.svg'
 import ticket from '../../../public/ticket.svg'
@@ -27,83 +26,76 @@ const DynamicFarming = dynamic(() => import('./Farming'), {
 
 const Home: FC = () => {
 	const [loading, setLoading] = useState(true)
-	// const [showJettonBalance, setShowJettonBalance] = useState(false)
 	const { push } = useRouter()
-	const { user } = useGetUser()
+	const [isAuth, setIsAuth] = useState(false)
+	const { user } = useGetUser(isAuth)
 	const [balance, setBalance] = useState<number>(0)
 	// const { jettonBalance } = useJettonContract() // баланс jetton
 	const { rewardCollected, setRewardCollected } = useFarmingContext()
 
-	const { refetch } = useQuery({
+	const { refetch: refetchBalance } = useQuery({
 		queryKey: ['user_balance'],
 		queryFn: () => farmingService.getBalance(),
 		enabled: false
 	})
 
-	const { mutate } = useTicket()
-
 	useEffect(() => {
-		if (rewardCollected) {
-			refetch().then(res => {
-				if (res.data) {
-					setBalance(res.data)
+		const fetchData = async () => {
+			try {
+				const balanceRes = await refetchBalance()
+				if (balanceRes.data) {
+					setBalance(balanceRes.data)
 				}
-			})
-			setRewardCollected(false) // Сброс состояния, если нужно
+			} catch (error) {
+				console.error('Failed to fetch balance:', error)
+			} finally {
+				setLoading(false)
+			}
 		}
-	}, [rewardCollected])
-
-	useEffect(() => {
 		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
-			if (!err) {
-				if (token) {
-					setLoading(false)
-					refetch().then(res => {
-						if (res.data) {
-							setBalance(res.data)
-						}
-					})
-				} else {
-					push(DASHBOARD_PAGES.AUTH)
-				}
+			if (err || !token) {
+				push(DASHBOARD_PAGES.AUTH)
 			} else {
-				throw new Error(err.message)
+				setIsAuth(true)
+				fetchData()
 			}
 		})
 		// Удаление токена из telegram storage
 		// storageService
-		// 	.removeItem('jwtToken')
+		// 	.removeItem('user')
 		// 	.then(() => {
-		// 		window.Telegram.WebApp.CloudStorage.getItem(
-		// 			'jwtToken',
-		// 			(err, token) => {
-		// 				if (!err) {
-		// 					if (token) {
-		// 						setLoading(false)
-		// 						refetch().then(res => {
-		// 							if (res.data) {
-		// 								setBalance(res.data)
-		// 							}
-		// 						})
-		// 					} else {
-		// 						push(DASHBOARD_PAGES.AUTH)
-		// 					}
+		// 		window.Telegram.WebApp.CloudStorage.getItem('user', (err, token) => {
+		// 			if (!err) {
+		// 				if (token) {
+		// 					setLoading(false)
+		// 					refetchBalance().then(res => {
+		// 						if (res.data) {
+		// 							setBalance(res.data)
+		// 						}
+		// 					})
 		// 				} else {
-		// 					console.log(`ERROR - ${err.message}`)
+		// 					push(DASHBOARD_PAGES.AUTH)
 		// 				}
+		// 			} else {
+		// 				console.log(`ERROR - ${err.message}`)
 		// 			}
-		// 		)
+		// 		})
 		// 	})
 		// 	.catch((error: Error) => {
 		// 		console.error('Error removing token:', error)
 		// 	})
-	}, [])
+	}, [push, refetchBalance])
 
-	// const toggleBalance = () => {
-	// 	setShowJettonBalance(prev => !prev)
-	// }
-
-	// if (loading) return <Loader size={50} />
+	useEffect(() => {
+		if (rewardCollected) {
+			refetchBalance().then(res => {
+				if (res.data) {
+					setBalance(res.data)
+				}
+			})
+			setRewardCollected(false)
+		}
+	}, [rewardCollected, refetchBalance])
 
 	return (
 		<>
@@ -125,10 +117,7 @@ const Home: FC = () => {
 								priority
 							/>
 							<h3 className='coin__balance'>
-								{/* {showJettonBalance
-									? `${jettonBalance ?? '0'} KRN`
-									: `${balance} POINTS`} */}
-								{balance} KRN
+								{balance === 0 ? `${user?.balance} KRN` : `${balance} KRN`}
 							</h3>
 							<p className='coin__text'>
 								invite friends and completed tasks for
@@ -144,7 +133,7 @@ const Home: FC = () => {
 						<div className='game'>
 							<div className='game__content'>
 								<button
-									onClick={() => mutate()}
+									onClick={() => push(DASHBOARD_PAGES.GAME)}
 									className='game__button'
 								>
 									Play game

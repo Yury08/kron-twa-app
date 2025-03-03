@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { FC, useEffect, useState } from 'react'
@@ -20,6 +20,7 @@ const Tasks: FC = () => {
 	const [loading, setLoading] = useState<boolean>(true)
 	const [loadingTaskId, setLoadingTaskId] = useState<string | null>(null)
 	const { push } = useRouter()
+	const queryClient = useQueryClient()
 
 	const { data: tasks } = useQuery({
 		queryKey: ['tasks'],
@@ -32,12 +33,11 @@ const Tasks: FC = () => {
 			await new Promise(resolve => setTimeout(resolve, 3000))
 			return taskService.completeTask(taskId)
 		},
-		onSuccess(data) {
-			console.log('Task completed:', data)
+		onSuccess() {
+			queryClient.invalidateQueries({ queryKey: ['tasks'] })
 			setLoadingTaskId(null)
 		},
-		onError(error) {
-			console.log('Error completing task:', error)
+		onError() {
 			setLoadingTaskId(null)
 		}
 	})

@@ -1,9 +1,16 @@
-FROM node:18
+FROM node:18-alpine
+
+RUN adduser --disabled-password --no-create-home kron
 
 WORKDIR /usr/src/app
 COPY package*.json ./
 
-RUN apt-get update && apt-get install -y openssl
+# Обновляем репозитории Alpine
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories
+
+# Устанавливаем openssl с помощью apk
+RUN apk update && apk add --no-cache openssl
 RUN npm install
 
 COPY . .

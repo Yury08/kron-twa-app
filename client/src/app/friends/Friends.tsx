@@ -36,7 +36,7 @@ const Friends: FC = () => {
 		mutationKey: ['updateFriendsEarning'],
 		mutationFn: () => friendService.updateFriendsEarning(),
 		onSuccess: async () => {
-			storageService.setItem(LAST_UPDATE_KEY, JSON.stringify(Date.now()))
+			await storageService.setItem(LAST_UPDATE_KEY, JSON.stringify(Date.now()))
 			await refetch()
 		},
 		onError: async error => {
@@ -129,8 +129,7 @@ const Friends: FC = () => {
 				</button>
 				<p className='friends__text'>
 					Get 5% for each referral and
-					<br />
-					ticket for every 3 referrals
+					<br />5 tickets for every referral
 				</p>
 			</div>
 

@@ -88,7 +88,7 @@ export class TasksService {
 		})
 
 		this.userService.updateBalance(
-			new Decimal(task.reward).dividedBy(1000),
+			new Decimal(task.reward).dividedBy(10),
 			userId
 		)
 		return updatedTask

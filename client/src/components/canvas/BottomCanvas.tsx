@@ -8,7 +8,7 @@ import styles from './BottomCanvas.module.css'
 
 export const BottomCanvas: FC<ICanvas> = ({ isOpen, setIsOpen }) => {
 	const [isCopied, setIsCopied] = useState(false)
-	const { user } = useGetUser()
+	const { user } = useGetUser(true)
 	//`https://t.me/twa_mini_game_bot?startapp=${user?.username}&referral=${user?.username}` - открывает приложение
 	const referralLink: string = user?.referralLink || ''
 

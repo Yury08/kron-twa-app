@@ -1,3 +1,5 @@
+const crypto = require('crypto')
+
 interface JWTToken {
 	headers: any
 	payload: any

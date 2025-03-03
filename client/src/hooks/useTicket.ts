@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
@@ -11,9 +12,8 @@ export const useTicket = () => {
 	const { mutate, data } = useMutation({
 		mutationKey: ['reducingTickets'],
 		mutationFn: () => userService.reducingUserTickets(),
-		async onSuccess(data) {
+		onSuccess(data) {
 			if (data === -1) {
-				const { toast } = await import('sonner')
 				toast.error("You don't have enough tickets")
 				push(DASHBOARD_PAGES.HOME)
 			} else {

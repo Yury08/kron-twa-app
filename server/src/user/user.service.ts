@@ -10,7 +10,7 @@ export class UserService {
 	constructor(private prisma: PrismaService) {}
 
 	private generateReferralLink(username: string) {
-		return `https://t.me/${process.env.BOT_URL}?startapp=${username}?referral=${username}`
+		return `https://t.me/${process.env.BOT_URL}/Kron?referral=${username}`
 	}
 
 	async getById(id: string) {

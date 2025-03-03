@@ -15,7 +15,7 @@ const Farming: FC = () => {
 	const { connected } = useTonConnect()
 	// const { refetchBalance } = useJettonContract()
 
-	const expiry = 14400 // 4 часа в секундах
+	const expiry = 120 // 14400 // 4 часа в секундах
 
 	const [ttl, setTtl] = useState<number>(0)
 	const [currentAmount, setCurrentAmount] = useState(0)

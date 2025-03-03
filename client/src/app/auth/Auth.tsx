@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 
@@ -13,45 +14,48 @@ import useTelegramInitData from '@/hooks/useTelegramInitData'
 
 import coin_logo_main from '../../../public/coin_logo_main.svg'
 import { Field } from '../../components/ui/field'
-import { IAuthForm } from '../../types/auth.types'
+import { IAuthForm, IUser } from '../../types/auth.types'
 
 import { authService } from '@/services/auth.service'
+import { storageService } from '@/services/storage.service'
 
 const DynamicImage = dynamic(() => import('next/image'), {
 	ssr: false
 })
 
 const Auth = () => {
-	const { register, reset, handleSubmit } = useForm<IAuthForm>({
+	const {
+		register,
+		reset,
+		handleSubmit,
+		formState: { errors }
+	} = useForm<IAuthForm>({
 		mode: 'onChange'
 	})
 
 	const { push } = useRouter()
 	const initData = useTelegramInitData()
 
-	if (!initData) {
-		console.log('Данные Telegram WebApp еще не загружены')
-		return <div>"Telegram WebApp is not open"</div>
-	}
-
-	const { user } = initData
+	const { user } = initData ?? {}
 
 	const { mutate } = useMutation({
 		mutationKey: ['auth'],
-		mutationFn: (data: IAuthForm) =>
-			authService.main({
+		mutationFn: (data: IAuthForm) => {
+			if (!user?.username) {
+				return Promise.reject(new Error('Username is missing'))
+			}
+			return authService.main({
 				...data,
-				tgUsername: user?.username
-			}),
-		onSuccess: async () => {
-			const { toast } = await import('sonner')
+				tgUsername: user.username
+			})
+		},
+		onSuccess: async (data: IUser) => {
+			await storageService.setItem('user', JSON.stringify(data))
 			toast.success('Successfully login')
 			reset()
 			push(DASHBOARD_PAGES.HOME)
 		},
-		onError: async (error: any) => {
-			const { toast } = await import('sonner')
-			// Проверяем, является ли ошибка ошибкой существующего пользователя
+		onError: (error: any) => {
 			if (error.response?.data?.message === 'User already exists') {
 				toast.info('This username is already taken. Please choose another one.')
 			} else {
@@ -59,6 +63,11 @@ const Auth = () => {
 			}
 		}
 	})
+
+	if (!initData) {
+		console.log('Данные Telegram WebApp еще не загружены')
+		return <div>"Telegram WebApp is not open"</div>
+	}
 
 	const onSubmit: SubmitHandler<IAuthForm> = data => {
 		mutate(data)
@@ -82,8 +91,18 @@ const Auth = () => {
 							id='username'
 							placeholder='indicate the name'
 							{...register('username', {
-								required: 'Username is required'
+								required: 'Username is required',
+								validate: {
+									noSpaces: value =>
+										!/\s/.test(value) || 'Username cannot contain spaces'
+								},
+								pattern: {
+									value: /^[a-zA-Z0-9_]+$/,
+									message:
+										'Username can only contain letters, numbers and underscores'
+								}
 							})}
+							error={errors.username?.message}
 						/>
 						<Button type='submit'>Let's farm</Button>
 					</form>

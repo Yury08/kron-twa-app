@@ -11,15 +11,7 @@ export class UserService {
 
 	async getUser() {
 		try {
-			console.log('Making API request to get user...')
-			const token = await storageService.getItem('jwtToken')
-			console.log('Current token:', token)
-
 			const res = await axiosTelegram.get<IUser>(this.URL)
-			console.log('API response:', res.data)
-
-			// Сохраняем в CloudStorage
-			await storageService.setItem('user', JSON.stringify(res.data))
 			return res.data
 		} catch (error) {
 			console.error('Error in getUser service:', error)

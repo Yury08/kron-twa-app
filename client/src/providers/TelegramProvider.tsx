@@ -9,6 +9,7 @@ const TelegramProvider: FC<PropsWithChildren> = ({ children }) => {
 
 		// Инициализация Telegram WebApp
 		if (window.Telegram?.WebApp) {
+			window.Telegram.WebApp.expand()
 			window.Telegram.WebApp.ready()
 
 			// if (isMobile) {
