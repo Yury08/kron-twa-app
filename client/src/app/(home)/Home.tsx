@@ -52,8 +52,10 @@ const Home: FC = () => {
 				setLoading(false)
 			}
 		}
+		const referralName = window.Telegram.WebApp.initDataUnsafe.start_param
 		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
 			if (err || !token) {
+				if (referralName) localStorage.setItem('referralName', referralName)
 				push(DASHBOARD_PAGES.AUTH)
 			} else {
 				setIsAuth(true)
@@ -65,6 +67,30 @@ const Home: FC = () => {
 		// 	.removeItem('user')
 		// 	.then(() => {
 		// 		window.Telegram.WebApp.CloudStorage.getItem('user', (err, token) => {
+		// 			if (!err) {
+		// 				if (token) {
+		// 					setLoading(false)
+		// 					refetchBalance().then(res => {
+		// 						if (res.data) {
+		// 							setBalance(res.data)
+		// 						}
+		// 					})
+		// 				} else {
+		// 					push(DASHBOARD_PAGES.AUTH)
+		// 				}
+		// 			} else {
+		// 				console.log(`ERROR - ${err.message}`)
+		// 			}
+		// 		})
+		// 	})
+		// 	.catch((error: Error) => {
+		// 		console.error('Error removing token:', error)
+		// 	})
+		// Удаление токена из telegram storage
+		// storageService
+		// 	.removeItem('jwtToken')
+		// 	.then(() => {
+		// 		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
 		// 			if (!err) {
 		// 				if (token) {
 		// 					setLoading(false)

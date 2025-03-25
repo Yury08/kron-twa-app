@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -24,6 +25,7 @@ const DynamicImage = dynamic(() => import('next/image'), {
 })
 
 const Auth = () => {
+	const [refName, setRefName] = useState<string | null>(null)
 	const {
 		register,
 		reset,
@@ -38,18 +40,29 @@ const Auth = () => {
 
 	const { user } = initData ?? {}
 
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			const refParam = localStorage.getItem('referralName') || null
+			setRefName(refParam)
+		}
+	}, [])
+
 	const { mutate } = useMutation({
 		mutationKey: ['auth'],
 		mutationFn: (data: IAuthForm) => {
 			if (!user?.username) {
 				return Promise.reject(new Error('Username is missing'))
 			}
-			return authService.main({
-				...data,
-				tgUsername: user.username
-			})
+			return authService.main(
+				{
+					...data,
+					tgUsername: user.username
+				},
+				refName
+			)
 		},
 		onSuccess: async (data: IUser) => {
+			localStorage.removeItem('referralName')
 			await storageService.setItem('user', JSON.stringify(data))
 			toast.success('Successfully login')
 			reset()
