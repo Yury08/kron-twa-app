@@ -32,7 +32,6 @@ const Home: FC = () => {
 	const [balance, setBalance] = useState<number>(0)
 	// const { jettonBalance } = useJettonContract() // баланс jetton
 	const { rewardCollected, setRewardCollected } = useFarmingContext()
-
 	const { refetch: refetchBalance } = useQuery({
 		queryKey: ['user_balance'],
 		queryFn: () => farmingService.getBalance(),
@@ -52,8 +51,10 @@ const Home: FC = () => {
 				setLoading(false)
 			}
 		}
+		const refferalName = window.Telegram.WebApp.initDataUnsafe.start_param
 		window.Telegram.WebApp.CloudStorage.getItem('jwtToken', (err, token) => {
 			if (err || !token) {
+				if (refferalName) localStorage.setItem('referralName', refferalName)
 				push(DASHBOARD_PAGES.AUTH)
 			} else {
 				setIsAuth(true)
@@ -61,6 +62,33 @@ const Home: FC = () => {
 			}
 		})
 		// Удаление токена из telegram storage
+		// storageService
+		// 	.removeItem('jwtToken')
+		// 	.then(() => {
+		// 		window.Telegram.WebApp.CloudStorage.getItem(
+		// 			'jwtToken',
+		// 			(err, token) => {
+		// 				if (!err) {
+		// 					if (token) {
+		// 						setLoading(false)
+		// 						refetchBalance().then(res => {
+		// 							if (res.data) {
+		// 								setBalance(res.data)
+		// 							}
+		// 						})
+		// 					} else {
+		// 						push(DASHBOARD_PAGES.AUTH)
+		// 					}
+		// 				} else {
+		// 					console.log(`ERROR - ${err.message}`)
+		// 				}
+		// 			}
+		// 		)
+		// 	})
+		// 	.catch((error: Error) => {
+		// 		console.error('Error removing token:', error)
+		// 	})
+
 		// storageService
 		// 	.removeItem('user')
 		// 	.then(() => {
@@ -112,13 +140,10 @@ const Home: FC = () => {
 								width={250}
 								height={250}
 								alt='coin image'
-								// onClick={toggleBalance}
 								style={{ cursor: 'pointer' }}
 								priority
 							/>
-							<h3 className='coin__balance'>
-								{balance === 0 ? `${user?.balance} KRN` : `${balance} KRN`}
-							</h3>
+							<h3 className='coin__balance'>{`${balance} KRN`}</h3>
 							<p className='coin__text'>
 								invite friends and completed tasks for
 								<Image

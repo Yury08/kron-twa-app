@@ -7,8 +7,6 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { ITaskForm, TypeTask } from '@/types/task.types'
 
-import { DASHBOARD_PAGES } from '@/config/pages-url.config'
-
 import { taskService } from '@/services/task.service'
 
 const Admin: FC = () => {
@@ -44,7 +42,7 @@ const Admin: FC = () => {
 			try {
 				await taskService.createTask({ title: '' }) // Пробный запрос
 			} catch (error) {
-				push(DASHBOARD_PAGES.HOME)
+				throw new Error("You don't have permission")
 			}
 		}
 		checkAccess()
